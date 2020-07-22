@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity  implements OnClickListener 
         Log.d("kwwl","Msg is " + msg);
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        String jsonStr = "{\"user_id\":\"12121233\"," +
+        String jsonStr = "{\"user_id\":\"12624243\"," +
                 "\"first_chat\": false," +
                 "\"request_text\": \""+ msg +"\"," +
                 "\"user_city\": \"北京\"," +
