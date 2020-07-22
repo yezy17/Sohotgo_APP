@@ -72,8 +72,6 @@ public class MainActivity extends AppCompatActivity  implements OnClickListener 
         iv_send.setOnClickListener((OnClickListener) this);
         adapter = new TextAdapter(lists, this);
         lv.setAdapter(adapter);
-        //刷新界面
-//        refresh("start ...", RECEIVER);
         useAPI_withpost("first conv", handler);
     }
 
@@ -83,7 +81,7 @@ public class MainActivity extends AppCompatActivity  implements OnClickListener 
         lists.add(listData);
         //如果item数量大于30，清空数据
         if (lists.size() > 30) {
-            for (int i = 0; i < lists.size(); i++) {
+            for (int i = lists.size()-2; i >= 0; i--) {
                 // 移除数据
                 lists.remove(i);
             }
@@ -104,7 +102,7 @@ public class MainActivity extends AppCompatActivity  implements OnClickListener 
         Log.d("kwwl","Msg is " + msg);
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        String jsonStr = "{\"user_id\":\"12624243\"," +
+        String jsonStr = "{\"user_id\":\"12724243\"," +
                 "\"first_chat\": false," +
                 "\"request_text\": \""+ msg +"\"," +
                 "\"user_city\": \"北京\"," +
