@@ -1,8 +1,12 @@
 package com.example.sohotgo_test;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +17,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.EditText;
 
+import com.baidu.aip.asrwakeup3.core.mini.AutoCheck;
+import com.baidu.speech.EventListener;
+import com.baidu.speech.EventManager;
+import com.baidu.speech.EventManagerFactory;
+import com.baidu.speech.asr.SpeechConstant;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,7 +30,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import okhttp3.Call;
@@ -35,23 +47,43 @@ import static com.example.sohotgo_test.ListData.RECEIVER;
 
 
 
-public class MainActivity extends AppCompatActivity  implements OnClickListener {
+public class MainActivity extends AppCompatActivity  implements EventListener {
 
     private List<ListData> lists;
     private ListView lv;
     private ImageView iv_send;
+    private EditText getMsg;
     private TextAdapter adapter;
     private ListData listData;
 
     private String Jsonstr;
+    private String userID;
+
+    //百度语音识别相关
+    private EventManager asr;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d("kwwl","in there");
-
         initView();
+        initPermission();
+        /*  百度语音相关   */
+        asr = EventManagerFactory.create(this, "asr");
+        asr.registerListener(this);
+
+        iv_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start();
+//                String str = getMsg.getText().toString();
+//                refresh(str, ListData.SEND);
+//                getMsg.setText("");
+//                useAPI_withpost(str, handler);
+            }
+        });
     }
 
     @SuppressLint("HandlerLeak")
@@ -66,14 +98,120 @@ public class MainActivity extends AppCompatActivity  implements OnClickListener 
 
     private void initView() {
         Jsonstr = "lollol";
+        getRandomUserID();
+        getMsg = findViewById(R.id.getMsg);
         lv = findViewById(R.id.lv);
         iv_send = findViewById(R.id.iv_send);
         lists = new ArrayList<ListData>();
-        iv_send.setOnClickListener((OnClickListener) this);
         adapter = new TextAdapter(lists, this);
         lv.setAdapter(adapter);
-        useAPI_withpost("first conv", handler);
+        useAPI_withpost("first", handler);
     }
+
+    private void getRandomUserID() {
+        String idRand="" ;
+        for(int i=0;i<8;i++){
+            idRand += String.valueOf((int)(Math.random() * 10)) ;
+        }
+        userID = idRand;
+    }
+
+    @SuppressLint("HandlerLeak")
+    private void start() {
+        Map<String, Object> params = new LinkedHashMap<String, Object>();
+        String event = null;
+        event = SpeechConstant.ASR_START; // 替换成测试的event
+
+        // 基于SDK集成2.1 设置识别参数
+        params.put(SpeechConstant.ACCEPT_AUDIO_VOLUME, false);
+        // params.put(SpeechConstant.NLU, "enable");
+        // params.put(SpeechConstant.VAD_ENDPOINT_TIMEOUT, 0); // 长语音
+
+        // params.put(SpeechConstant.IN_FILE, "res:///com/baidu/android/voicedemo/16k_test.pcm");
+        // params.put(SpeechConstant.VAD, SpeechConstant.VAD_DNN);
+        // params.put(SpeechConstant.PID, 1537); // 中文输入法模型，有逗号
+
+        /* 语音自训练平台特有参数 */
+        // params.put(SpeechConstant.PID, 8002);
+        // 语音自训练平台特殊pid，8002：模型类似开放平台 1537  具体是8001还是8002，看自训练平台页面上的显示
+        // params.put(SpeechConstant.LMID,1068); // 语音自训练平台已上线的模型ID，https://ai.baidu.com/smartasr/model
+        // 注意模型ID必须在你的appId所在的百度账号下
+        /* 语音自训练平台特有参数 */
+
+        /* 测试InputStream*/
+        // InFileStream.setContext(this);
+        // params.put(SpeechConstant.IN_FILE, "#com.baidu.aip.asrwakeup3.core.inputstream.InFileStream.createMyPipedInputStream()");
+
+        // 请先使用如‘在线识别’界面测试和生成识别参数。 params同ActivityRecog类中myRecognizer.start(params);
+        // 复制此段可以自动检测错误
+        (new AutoCheck(getApplicationContext(), new Handler() {
+            public void handleMessage(Message msg) {
+                if (msg.what == 100) {
+                    AutoCheck autoCheck = (AutoCheck) msg.obj;
+                    synchronized (autoCheck) {
+                        String message = autoCheck.obtainErrorMessage(); // autoCheck.obtainAllMessage();
+                        Log.w("AutoCheckMessage", message);
+                    }
+                }
+            }
+        }, false)).checkAsr(params);
+        String json = null; // 可以替换成自己的json
+        json = new JSONObject(params).toString(); // 这里可以替换成你需要测试的json
+        asr.send(event, json, null, 0, 0);
+    }
+
+    @Override
+    public void onEvent(String name, String params, byte[] data, int offset, int length) {
+        String logTxt = "name: " + name;
+
+        if (name.equals(SpeechConstant.CALLBACK_EVENT_ASR_PARTIAL)) {
+            // 识别相关的结果都在这里
+            if (params == null || params.isEmpty()) {
+                return;
+            }
+            if (params.contains("\"nlu_result\"")) {
+                // 一句话的语义解析结果
+                if (length > 0 && data.length > 0) {
+                    logTxt += ", 语义解析结果：" + new String(data, offset, length);
+                }
+            } else if (params.contains("\"partial_result\"")) {
+                // 一句话的临时识别结果
+                logTxt += ", 临时识别结果：" + params;
+            }  else if (params.contains("\"final_result\""))  {
+                // 一句话的最终识别结果
+                logTxt += ", 最终识别结果：" + params;
+                getResFromParams(params);
+            }  else {
+                // 一般这里不会运行
+                logTxt += " ;params :" + params;
+                if (data != null) {
+                    logTxt += " ;data length=" + data.length;
+                }
+            }
+        } else {
+            // 识别开始，结束，音量，音频数据回调
+            if (params != null && !params.isEmpty()){
+                logTxt += " ;params :" + params;
+            }
+            if (data != null) {
+                logTxt += " ;data length=" + data.length;
+            }
+        }
+    }
+
+    private void getResFromParams(String params) {
+        String asr_res = "";
+        try {
+            JSONObject result = new JSONObject(params);
+            asr_res = (String) result.get("best_result");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        refresh(asr_res, ListData.SEND);
+        getMsg.setText(asr_res);
+        useAPI_withpost(asr_res, handler);
+}
+
 
     //刷新页面
     private void refresh(String content,int flag) {
@@ -89,20 +227,21 @@ public class MainActivity extends AppCompatActivity  implements OnClickListener 
         adapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onClick(View view) {
-        EditText Msg = findViewById(R.id.getMsg);
-        String str = Msg.getText().toString();
-        refresh(str, ListData.SEND);
-        Msg.setText("");
-        useAPI_withpost(str, handler);
-    }
+//    @Override
+//    public void onClick(View view) {
+//        EditText Msg = findViewById(R.id.getMsg);
+//        String str = Msg.getText().toString();
+//        refresh(str, ListData.SEND);
+//        Msg.setText("");
+//        useAPI_withpost(str, handler);
+//    }
 
     private void useAPI_withpost(String msg, final Handler handler) {
+        refresh(msg, RECEIVER);
         Log.d("kwwl","Msg is " + msg);
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        String jsonStr = "{\"user_id\":\"12724243\"," +
+        String jsonStr = "{\"user_id\":\"" + userID + "\"," +
                 "\"first_chat\": false," +
                 "\"request_text\": \""+ msg +"\"," +
                 "\"user_city\": \"北京\"," +
@@ -149,12 +288,52 @@ public class MainActivity extends AppCompatActivity  implements OnClickListener 
         return "get answer failed";
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        asr.send(SpeechConstant.ASR_CANCEL, "{}", null, 0, 0);
+        Log.i("ActivityMiniRecog", "On pause");
+    }
 
-//    public void display(View v){
-//        System.out.println("in there");
-//        EditText Msg = findViewById(R.id.getMsg);
-//        TextView text = findViewById(R.id.showMsg);
-//        text.setText(Msg.getText().toString());
-//        System.out.println(Msg.getText().toString());
-//    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 基于SDK集成4.2 发送取消事件
+        asr.send(SpeechConstant.ASR_CANCEL, "{}", null, 0, 0);
+
+        // 基于SDK集成5.2 退出事件管理器
+        // 必须与registerListener成对出现，否则可能造成内存泄露
+        asr.unregisterListener(this);
+    }
+
+    /**
+     * android 6.0 以上需要动态申请权限
+     */
+    private void initPermission() {
+        String[] permissions = {Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.INTERNET,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+
+        ArrayList<String> toApplyList = new ArrayList<String>();
+
+        for (String perm : permissions) {
+            if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this, perm)) {
+                toApplyList.add(perm);
+                // 进入到这里代表没有权限.
+
+            }
+        }
+        String tmpList[] = new String[toApplyList.size()];
+        if (!toApplyList.isEmpty()) {
+            ActivityCompat.requestPermissions(this, toApplyList.toArray(tmpList), 123);
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        // 此处为android 6.0以上动态授权的回调，用户自行实现。
+    }
 }

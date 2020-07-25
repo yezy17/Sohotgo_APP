@@ -1,48 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    tools:context=".MainActivity">-->
-
-<!--    <Button-->
-<!--        android:id="@+id/sendMsg"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:onClick="display"-->
-<!--        android:text="@string/testButton"-->
-<!--        app:layout_constraintBaseline_toBaselineOf="@+id/getMsg"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/getMsg" />-->
-
-<!--    <EditText-->
-<!--        android:id="@+id/getMsg"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="10dp"-->
-<!--        android:layout_marginEnd="17dp"-->
-<!--        android:layout_marginBottom="75dp"-->
-<!--        android:autofillHints=""-->
-<!--        android:ems="10"-->
-<!--        android:inputType="textPersonName"-->
-<!--        android:text="@string/testEdit"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/sendMsg"-->
-<!--        app:layout_constraintHorizontal_chainStyle="packed"-->
-<!--        app:layout_constraintStart_toStartOf="parent" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/showMsg"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="240dp"-->
-<!--        android:text="@string/testText"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -55,7 +11,6 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:cacheColorHint="#ff000000"
         android:divider="@null"
         android:listSelector="@android:color/transparent"
         android:transcriptMode="alwaysScroll" />
@@ -63,16 +18,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#0C0C0C"
-        android:backgroundTint="#070707"
+        android:background="#33a3dc"
         android:orientation="vertical">
 
         <EditText
             android:id="@+id/getMsg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#0C0C0C"
-            android:backgroundTint="#FDFCFC"
+            android:background="#7bbfea"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="@string/testEdit" />
