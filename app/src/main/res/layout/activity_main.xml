@@ -17,7 +17,6 @@
         android:id="@+id/rv"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="0.5"
         android:background="@drawable/logo_small"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"

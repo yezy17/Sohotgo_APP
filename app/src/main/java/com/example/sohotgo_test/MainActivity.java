@@ -364,21 +364,4 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         // 此处为android 6.0以上动态授权的回调，用户自行实现。
     }
-
-    int i=0;
-
-
-    public void leftClick(View v){
-        //第一个参数指定发出内容，第二参数指定发出的是左还是右
-        itemAdapter.addItem("左边发出:\n右边你好"+i,LEFT);
-        recyclerView.smoothScrollToPosition(i);//移动到指定位置
-        i++;
-    }
-
-    public void rightClick(View v){
-        //第一个参数指定发出内容，第二参数指定发出的是左还是右
-        itemAdapter.addItem("右边发出:\n左边你好"+i,RIGHT);
-        recyclerView.smoothScrollToPosition(i);//移动到指定位置
-        i++;
-    }
 }
