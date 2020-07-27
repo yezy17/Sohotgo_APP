@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         lists = new ArrayList<ListData>();
         adapter = new TextAdapter(lists, this);
         lv.setAdapter(adapter);
-        //useAPI_withpost("first", handler);
+        useAPI_withpost("first", handler);
     }
 
     private void initTTs() {
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         mSpeechSynthesizer.setAppId("11005757");
         mSpeechSynthesizer.setApiKey("Ovcz19MGzIKoDDb3IsFFncG1","e72ebb6d43387fc7f85205ca7e6706e2");
 
-        mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER, "0"); // 设置发声的人声音，在线生效
+        mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER, "1"); // 设置发声的人声音，在线生效
         mSpeechSynthesizer.initTts(TtsMode.ONLINE);
     }
 
