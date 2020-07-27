@@ -22,6 +22,8 @@ import com.baidu.speech.EventListener;
 import com.baidu.speech.EventManager;
 import com.baidu.speech.EventManagerFactory;
 import com.baidu.speech.asr.SpeechConstant;
+import com.baidu.tts.client.SpeechSynthesizer;
+import com.baidu.tts.client.TtsMode;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
 
     //百度语音识别相关
     private EventManager asr;
+    // 百度语音合成相关
+    protected SpeechSynthesizer mSpeechSynthesizer;
 
 
     @Override
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         setContentView(R.layout.activity_main);
         Log.d("kwwl","in there");
         initView();
+        initTTs();
         initPermission();
         /*  百度语音相关   */
         asr = EventManagerFactory.create(this, "asr");
@@ -78,10 +83,6 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
             @Override
             public void onClick(View v) {
                 start();
-//                String str = getMsg.getText().toString();
-//                refresh(str, ListData.SEND);
-//                getMsg.setText("");
-//                useAPI_withpost(str, handler);
             }
         });
     }
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
             Jsonstr = (String) msg.obj;
             refresh(Jsonstr, RECEIVER);
             Log.e("test", "handleMessage: " + Jsonstr);
+            mSpeechSynthesizer.speak(Jsonstr);
         }
     };
 
@@ -106,6 +108,16 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         adapter = new TextAdapter(lists, this);
         lv.setAdapter(adapter);
         useAPI_withpost("first", handler);
+    }
+
+    private void initTTs() {
+        mSpeechSynthesizer = SpeechSynthesizer.getInstance();
+        mSpeechSynthesizer.setContext(this);
+        mSpeechSynthesizer.setAppId("11005757");
+        mSpeechSynthesizer.setApiKey("Ovcz19MGzIKoDDb3IsFFncG1","e72ebb6d43387fc7f85205ca7e6706e2");
+
+        mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER, "0"); // 设置发声的人声音，在线生效
+        mSpeechSynthesizer.initTts(TtsMode.ONLINE);
     }
 
     private void getRandomUserID() {
@@ -226,18 +238,10 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         }
         adapter.notifyDataSetChanged();
     }
-
-//    @Override
-//    public void onClick(View view) {
-//        EditText Msg = findViewById(R.id.getMsg);
-//        String str = Msg.getText().toString();
-//        refresh(str, ListData.SEND);
-//        Msg.setText("");
-//        useAPI_withpost(str, handler);
-//    }
+    
 
     private void useAPI_withpost(String msg, final Handler handler) {
-        refresh(msg, RECEIVER);
+        msg = msg.replaceAll("[，？]", "");
         Log.d("kwwl","Msg is " + msg);
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -313,7 +317,10 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         String[] permissions = {Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.ACCESS_NETWORK_STATE,
                 Manifest.permission.INTERNET,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.MODIFY_AUDIO_SETTINGS,
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.CHANGE_WIFI_STATE
         };
 
         ArrayList<String> toApplyList = new ArrayList<String>();
