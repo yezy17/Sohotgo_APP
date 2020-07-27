@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         lists = new ArrayList<ListData>();
         adapter = new TextAdapter(lists, this);
         lv.setAdapter(adapter);
-        useAPI_withpost("first", handler);
+        //useAPI_withpost("first", handler);
     }
 
     private void initTTs() {
