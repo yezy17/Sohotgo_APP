@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         lists = new ArrayList<ListData>();
         adapter = new TextAdapter(lists, this);
         lv.setAdapter(adapter);
-        useAPI_withpost("first", handler);
+        //useAPI_withpost("first", handler);
     }
 
     private void getRandomUserID() {
@@ -238,6 +238,7 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
 
     private void useAPI_withpost(String msg, final Handler handler) {
         refresh(msg, RECEIVER);
+        msg = msg.replaceAll( "[，？]" , "");
         Log.d("kwwl","Msg is " + msg);
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
