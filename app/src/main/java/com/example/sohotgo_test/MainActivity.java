@@ -14,10 +14,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.EditText;
 
 import com.baidu.aip.asrwakeup3.core.mini.AutoCheck;
 import com.baidu.speech.EventListener;
@@ -55,14 +54,13 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
 
     private List<ListData> lists;
     private ListView lv;
-    private ImageView iv_send;
-    private EditText getMsg;
+    private ImageButton iv_send;
     //private TextAdapter adapter;
     private ListData listData;
     RecyclerView recyclerView;
     ItemAdapter itemAdapter;
-    final  static int LEFT=1;
-    final  static int RIGHT=2;
+    final  static int LEFT=2;
+    final  static int RIGHT=1;
 
     private String Jsonstr;
     private String userID;
@@ -107,7 +105,6 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
     private void initView() {
         Jsonstr = "lollol";
         getRandomUserID();
-        getMsg = findViewById(R.id.getMsg);
         iv_send = findViewById(R.id.iv_send);
         lists = new ArrayList<ListData>();
         useAPI_withpost("first", handler);
@@ -228,7 +225,6 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
             e.printStackTrace();
         }
         refresh(asr_res, ListData.SEND);
-        getMsg.setText(asr_res);
         useAPI_withpost(asr_res, handler);
     }
 
