@@ -100,7 +100,8 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
             Jsonstr = (String) msg.obj;
             refresh(Jsonstr, RECEIVER);
             Log.e("test", "handleMessage: " + Jsonstr);
-            mSpeechSynthesizer.speak(Jsonstr);
+
+            readtext(Jsonstr);
         }
     };
 
@@ -297,6 +298,23 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
             e.printStackTrace();
         }
         return "get answer failed";
+    }
+
+    private void readtext(String str){
+        if (str.length() > 60) {
+            String[] strs = str.split("[;,，。?？：]");
+            String str_add = "";
+            for (String s : strs) {
+                if (str_add.length() + s.length() > 60) {
+                    mSpeechSynthesizer.speak(str_add);
+                    str_add = "";
+                }
+                str_add = str_add + "，" + s;
+            }
+            mSpeechSynthesizer.speak(str_add);
+        } else {
+            mSpeechSynthesizer.speak(str);
+        }
     }
 
     @Override
