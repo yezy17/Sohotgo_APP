@@ -3,6 +3,8 @@ package com.example.sohotgo_test;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -55,8 +57,12 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
     private ListView lv;
     private ImageView iv_send;
     private EditText getMsg;
-    private TextAdapter adapter;
+    //private TextAdapter adapter;
     private ListData listData;
+    RecyclerView recyclerView;
+    ItemAdapter itemAdapter;
+    final  static int LEFT=1;
+    final  static int RIGHT=2;
 
     private String Jsonstr;
     private String userID;
@@ -102,12 +108,14 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         Jsonstr = "lollol";
         getRandomUserID();
         getMsg = findViewById(R.id.getMsg);
-        lv = findViewById(R.id.lv);
         iv_send = findViewById(R.id.iv_send);
         lists = new ArrayList<ListData>();
-        adapter = new TextAdapter(lists, this);
-        lv.setAdapter(adapter);
-        //useAPI_withpost("first", handler);
+        useAPI_withpost("first", handler);
+
+        recyclerView= (RecyclerView) findViewById(R.id.rv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        itemAdapter=new ItemAdapter(lists,this);
+        recyclerView.setAdapter(itemAdapter);
     }
 
     private void initTTs() {
@@ -222,13 +230,11 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         refresh(asr_res, ListData.SEND);
         getMsg.setText(asr_res);
         useAPI_withpost(asr_res, handler);
-}
+    }
 
 
     //刷新页面
     private void refresh(String content,int flag) {
-        listData = new ListData(content, flag);
-        lists.add(listData);
         //如果item数量大于30，清空数据
         if (lists.size() > 30) {
             for (int i = lists.size()-2; i >= 0; i--) {
@@ -236,7 +242,8 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
                 lists.remove(i);
             }
         }
-        adapter.notifyDataSetChanged();
+        itemAdapter.addItem(content,flag);
+        recyclerView.smoothScrollToPosition(lists.size());
     }
     
 
@@ -342,5 +349,22 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         // 此处为android 6.0以上动态授权的回调，用户自行实现。
+    }
+
+    int i=0;
+
+
+    public void leftClick(View v){
+        //第一个参数指定发出内容，第二参数指定发出的是左还是右
+        itemAdapter.addItem("左边发出:\n右边你好"+i,LEFT);
+        recyclerView.smoothScrollToPosition(i);//移动到指定位置
+        i++;
+    }
+
+    public void rightClick(View v){
+        //第一个参数指定发出内容，第二参数指定发出的是左还是右
+        itemAdapter.addItem("右边发出:\n左边你好"+i,RIGHT);
+        recyclerView.smoothScrollToPosition(i);//移动到指定位置
+        i++;
     }
 }
