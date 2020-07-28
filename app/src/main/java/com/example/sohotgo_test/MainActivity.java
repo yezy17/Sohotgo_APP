@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.baidu.aip.asrwakeup3.core.mini.AutoCheck;
 import com.baidu.speech.EventListener;
@@ -176,6 +177,7 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         String json = null; // 可以替换成自己的json
         json = new JSONObject(params).toString(); // 这里可以替换成你需要测试的json
         asr.send(event, json, null, 0, 0);
+        Toast.makeText(this, "小Go在听哦~", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -199,6 +201,7 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
                 // 一句话的最终识别结果
                 logTxt += ", 最终识别结果：" + params;
                 getResFromParams(params);
+                Toast.makeText(this, "结束收音", Toast.LENGTH_SHORT).show();
             }  else {
                 // 一般这里不会运行
                 logTxt += " ;params :" + params;
