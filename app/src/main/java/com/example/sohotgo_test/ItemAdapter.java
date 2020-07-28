@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,10 +45,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.MyViewHolder> 
         if(data.getFlag()==MainActivity.LEFT){
             holder.tvLeft.setVisibility(View.VISIBLE);
             holder.tvRight.setVisibility(View.GONE);
+            holder.ivLeft.setVisibility(View.VISIBLE);
+            holder.ivRight.setVisibility(View.GONE);
             holder.tvLeft.setText(data.getContent());
         }else if(data.getFlag()==MainActivity.RIGHT){
             holder.tvLeft.setVisibility(View.GONE);
             holder.tvRight.setVisibility(View.VISIBLE);
+            holder.ivLeft.setVisibility(View.GONE);
+            holder.ivRight.setVisibility(View.VISIBLE);
             holder.tvRight.setText(data.getContent());
         }
     }
@@ -68,12 +73,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.MyViewHolder> 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tvLeft,tvRight;
+        ImageView ivLeft,ivRight;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             tvLeft = (TextView) itemView.findViewById(R.id.leftTv);
             tvRight = (TextView) itemView.findViewById(R.id.rightTv);
-
+            ivLeft = (ImageView) itemView.findViewById(R.id.leftIv);
+            ivRight = (ImageView) itemView.findViewById(R.id.rightIv);
         }
     }
 }
