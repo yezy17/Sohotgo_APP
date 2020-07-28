@@ -35,12 +35,21 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="248dp"
+            android:layout_width="wrap_content"
             android:layout_height="77dp"
             app:layout_constraintBottom_toTopOf="@+id/iv_send"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/recorded"
+                android:layout_width="69dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/recorded" />
 
             <TextView
                 android:id="@+id/textView"
@@ -51,19 +60,19 @@
                 android:textColor="#FFFCFC"
                 android:textSize="25sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/spin_kit"
+                app:layout_constraintEnd_toStartOf="@+id/recording"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.github.ybq.android.spinkit.SpinKitView
-                android:id="@+id/spin_kit"
+                android:id="@+id/recording"
                 style="@style/SpinKitView.Large.Wave"
-                android:layout_width="wrap_content"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:scaleX="0.8"
                 android:scaleY="0.8"
-                app:SpinKit_Color="@color/colorAccent"
+                app:SpinKit_Color="@android:color/holo_red_dark"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

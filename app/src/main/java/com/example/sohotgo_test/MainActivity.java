@@ -26,6 +26,7 @@ import com.baidu.speech.EventManagerFactory;
 import com.baidu.speech.asr.SpeechConstant;
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.TtsMode;
+import com.github.ybq.android.spinkit.SpinKitView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
     private ListData listData;
     RecyclerView recyclerView;
     ItemAdapter itemAdapter;
+    SpinKitView recording;
+    ImageView recorded;
     final  static int LEFT=2;
     final  static int RIGHT=1;
 
@@ -115,6 +118,12 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         itemAdapter=new ItemAdapter(lists,this);
         recyclerView.setAdapter(itemAdapter);
+
+
+        recording =(SpinKitView) findViewById(R.id.recording);
+        recording.setVisibility(View.INVISIBLE);
+        recorded=(ImageView) findViewById(R.id.recorded);
+        recorded.setVisibility(View.VISIBLE);
     }
 
     private void initTTs() {
@@ -137,6 +146,9 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
 
     @SuppressLint("HandlerLeak")
     private void start() {
+        recorded.setVisibility(View.INVISIBLE);
+        recording.setVisibility(View.VISIBLE);
+
         Map<String, Object> params = new LinkedHashMap<String, Object>();
         String event = null;
         event = SpeechConstant.ASR_START; // 替换成测试的event
@@ -202,6 +214,8 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
                 logTxt += ", 最终识别结果：" + params;
                 getResFromParams(params);
                 Toast.makeText(this, "结束收音", Toast.LENGTH_SHORT).show();
+                recorded.setVisibility(View.VISIBLE);
+                recording.setVisibility(View.INVISIBLE);
             }  else {
                 // 一般这里不会运行
                 logTxt += " ;params :" + params;
