@@ -189,7 +189,6 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         String json = null; // 可以替换成自己的json
         json = new JSONObject(params).toString(); // 这里可以替换成你需要测试的json
         asr.send(event, json, null, 0, 0);
-        Toast.makeText(this, "小Go在听哦~", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -213,7 +212,6 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
                 // 一句话的最终识别结果
                 logTxt += ", 最终识别结果：" + params;
                 getResFromParams(params);
-                Toast.makeText(this, "结束收音", Toast.LENGTH_SHORT).show();
                 recorded.setVisibility(View.VISIBLE);
                 recording.setVisibility(View.INVISIBLE);
             }  else {
