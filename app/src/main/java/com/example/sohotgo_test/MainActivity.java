@@ -247,13 +247,13 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
 
     //刷新页面
     private void refresh(String content,int flag) {
-        //如果item数量大于30，清空数据
-        if (lists.size() > 30) {
-            for (int i = lists.size()-2; i >= 0; i--) {
-                // 移除数据
-                lists.remove(i);
-            }
-        }
+//        //如果item数量大于30，清空数据
+//        if (lists.size() > 30) {
+//            for (int i = lists.size()-2; i >= 0; i--) {
+//                // 移除数据
+//                lists.remove(i);
+//            }
+//        }
         itemAdapter.addItem(content,flag);
         recyclerView.smoothScrollToPosition(lists.size());
     }
