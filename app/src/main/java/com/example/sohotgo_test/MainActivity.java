@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
     ItemAdapter itemAdapter;
     SpinKitView recording;
     ImageView recorded;
+    Boolean awake=false;
     final  static int LEFT=2;
     final  static int RIGHT=1;
 
@@ -100,10 +101,12 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         @Override
         public void handleMessage(Message msg) {
             Jsonstr = (String) msg.obj;
-            refresh(Jsonstr, RECEIVER);
             Log.e("test", "handleMessage: " + Jsonstr);
+            if(!Jsonstr.equals("idle")) {
+                refresh(Jsonstr, RECEIVER);
 
-            readtext(Jsonstr);
+                readtext(Jsonstr);
+            }
         }
     };
 
@@ -237,11 +240,20 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
         try {
             JSONObject result = new JSONObject(params);
             asr_res = (String) result.get("best_result");
+            asr_res=asr_res.replaceAll("，","");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        refresh(asr_res, ListData.SEND);
-        useAPI_withpost(asr_res, handler);
+        if (asr_res.contains("小狗")||asr_res.contains("小沟")||asr_res.contains("小够")||asr_res.contains("小勾")||asr_res.contains("小苟")){
+            refresh(asr_res.replaceAll("小狗|小沟|小勾|小够|小苟","小Go"), ListData.SEND);
+            useAPI_withpost("小沟", handler);
+            awake=true;
+        }else {
+            if(awake){
+                refresh(asr_res, ListData.SEND);
+                useAPI_withpost(asr_res, handler);
+            }
+        }
     }
 
 
