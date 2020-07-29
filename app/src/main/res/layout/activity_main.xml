@@ -35,22 +35,24 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
-            android:id="@+id/iv_send"
+            android:id="@+id/iv_send_inv"
             android:layout_width="249dp"
             android:layout_height="43dp"
             android:layout_marginBottom="20dp"
             android:backgroundTint="#FFFFFF"
             android:scaleType="centerInside"
             android:tint="#DC613C"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/voice" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/iv_send"
             android:layout_width="wrap_content"
             android:layout_height="77dp"
-            app:layout_constraintBottom_toTopOf="@+id/iv_send"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -69,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:text="点击后说话"
+                android:text="请说话"
                 android:textColor="#FFFCFC"
                 android:textSize="25sp"
                 app:layout_constraintBottom_toBottomOf="parent"

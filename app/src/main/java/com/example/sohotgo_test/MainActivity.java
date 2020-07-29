@@ -1,6 +1,7 @@
 package com.example.sohotgo_test;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity  implements EventListener {
 
     private List<ListData> lists;
     private ListView lv;
-    private ImageButton iv_send;
+    private ConstraintLayout iv_send;
     //private TextAdapter adapter;
     private ListData listData;
     RecyclerView recyclerView;
